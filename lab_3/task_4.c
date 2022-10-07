@@ -13,56 +13,80 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define BUF_SIZE 1024
+#define STR_SIZE 1024
+#define SYM_SIZE 1
 
 int main(int argc, char **argv)
 {
     /* Проверяем на наличие аргументов */
-    if(argc != 2){
-        fprintf(stderr, "Недостаточно аргументов\n");
+    if(argc != 3){
+        fprintf(stderr, "Введите 3 аргумента\n");
         exit(EXIT_FAILURE);
     }
-
-    /* Открываем файл для чтения и записи с флагом O_APPEND */
+    
+    /* Открываем файл */
     int file;
     if(-1 == (file = open(argv[1], O_APPEND | O_RDWR))){
-        perror("Не открыть файл");
-        exit(EXIT_FAILURE);
-    }
-
-    /* Указатель, для чтения из произвольного места */
-    int poz;
-    if(-1 == (poz = lseek(file, 0, SEEK_SET))){
-        perror("Не удалось установить указатель в файле");
-        exit(EXIT_FAILURE);
-    }
-
-    /* Читаем из файла с помощью функции read()*/
-    int text;
-    char buf[BUF_SIZE];
-    if(-1 == (text = read(file, buf, sizeof(buf)))){
         perror(argv[1]);
         exit(EXIT_FAILURE);
     }
-    fprintf(stdout, "Содержимое входного файла:\n%s\n", buf);
+    
+    int pos;
 
-    /* Записываем в произвольное место с помощью функции lseek() */
-    char message[] = "MESSAGE ";
-    int line = sizeof(message);
-    if(-1 == (poz = lseek(file, 0, SEEK_SET))){
+    /* Перемещаем указатель */    
+    if(-1 == (pos = lseek(file, 0, SEEK_SET))){
         perror("Не удалось установить указатель в файле");
         exit(EXIT_FAILURE);
     }
-    if(-1 == (text = write(file, message, line - 1))){
-        perror("ошибка write");
+    
+    /* Читаем из файла */
+    int text;
+    char str_buf[STR_SIZE];
+    if(-1 == (text = read(file, str_buf, sizeof(str_buf)))){
+        perror(argv[1]);
         exit(EXIT_FAILURE);
     }
-    fprintf(stdout, "Записано в файл:\n%s\n", message);
+    str_buf[text] = '\0';
+    fprintf(stdout, "Содержимое входного файла файл:\n%s\n", str_buf);
+
+    /* Позиция введённая пользователем */
+    long search = atoi(argv[2]);
+
+    /* Перемещаем указатель позицию введённую пользователем */    
+    if(-1 == (pos = lseek(file, (long) search * SYM_SIZE, 0))){
+        perror("Не удалось установить указатель в файле");
+        exit(EXIT_FAILURE);
+    }
+    
+    /* Читаем из файла */
+    char sym_buf[SYM_SIZE];
+    if(-1 == (text = read(file, sym_buf, SYM_SIZE))){
+        perror(argv[1]);
+        exit(EXIT_FAILURE);
+    }
+    sym_buf[text] = '\0';
+    fprintf(stdout, "Символ из выбранного места:\n\"%s\"\n", sym_buf);
+
+    /* Записываем в файл */
+    char data[] = " data";
+    int line = sizeof(data);
+    if(-1 == (pos = lseek(file, 0, SEEK_SET))){
+        perror("Не удалось установить указатель в файле");
+        exit(EXIT_FAILURE);
+    }
+
+    /* Проверка записи в файл */
+    if(-1 == (text = write(file, data, line - 1))){
+        perror("Ошибка write");
+        exit(EXIT_FAILURE);
+    }
+    fprintf(stdout, "Записано в файл:\n%s\n", data);
 
     /* Закрываем файл */
     if(-1 == (close(file))){
         perror(argv[1]);
         exit(EXIT_FAILURE);
     }
+    
     exit(0);
 }

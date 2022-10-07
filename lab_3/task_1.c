@@ -1,5 +1,7 @@
 /**
- * task_1.c — программа копирования файлов
+ * task_1.c — программа копирования файлов. Должна получать два аргумента командной строки, 
+ * Первый аргумент - файл, откуда копировать, 
+ * Второй аргумент - файл, куда копировать.
  *
  * Copyright (c) <2022> <Гордеев Никита>
  *
@@ -7,7 +9,7 @@
  */
 
 #include <fcntl.h>
-#include <unistd.h>             // close lseek read write pread pwrite
+#include <unistd.h>             
 #include <stdio.h>
 #include <stdlib.h>
 #define BUF_SIZE 1024
