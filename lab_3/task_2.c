@@ -9,7 +9,7 @@
  */
 
 #include <fcntl.h>
-#include <unistd.h>             // close lseek read write pread pwrite
+#include <unistd.h>             
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

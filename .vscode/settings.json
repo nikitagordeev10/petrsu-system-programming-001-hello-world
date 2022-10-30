@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "types.h": "c",
+        "listing_steven": "c"
+    },
+    "C_Cpp.errorSquiggles": "Enabled"
+}
