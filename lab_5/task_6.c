@@ -29,7 +29,7 @@ int main(int argc, char **argv)
     }
 
     /* определение количества символов в строке UTF-8 */
-    printf("%d\n", strlen_utf8(argv[1]));
+    printf("Количество симолов в строке: %d\n", strlen_utf8(argv[1]));
     return 0;
 }
 
