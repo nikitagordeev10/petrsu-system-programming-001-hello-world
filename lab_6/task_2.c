@@ -27,20 +27,20 @@ int main(int argc, char **argv)
     pid_t pid = fork();
     int position;
 
-    // Проверка открытия файла
+    /* Проверка открытия файла */
     if (file == -1){
 	    fprintf (stderr, "Невозможно открыть файл для записи %s", argv[1]);
         exit(EXIT_FAILURE);
     }
 
-    // Вызов функции fork
+    /* Вызов функции fork */
     if((pid) < 0){
         fprintf (stderr, "Ошибка создания нового процесса fork\n");
 	    exit(EXIT_FAILURE);
     } 
     
     else if (pid == 0){
-        // Явное изменение текущей позиции в файле. От начала файла.
+        /* Явное изменение текущей позиции в файле. От начала файла. */
         position = lseek(file, 10, SEEK_SET);
 
         if (position == -1){
@@ -52,13 +52,13 @@ int main(int argc, char **argv)
 	} 
     
     else {
-        // waitpid ожидает смену состояния процесса
+        /* waitpid ожидает смену состояния процесса */
 	    if (waitpid(pid, NULL, 0) < 0) {
             fprintf (stderr, "Ошибка вызова функции waitpid\n");
             exit(EXIT_FAILURE);
 	    }
         
-        // Явное изменение текущей позиции в файле. от текущей позиции в файле.
+        /* Явное изменение текущей позиции в файле. от текущей позиции в файле. */
         position = lseek(file, 0, SEEK_CUR);
 
 	    if (position == -1){

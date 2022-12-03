@@ -18,7 +18,7 @@ int main(int argc, char **argv)
 {
     int status;
 
-    // Вызов строки с датой и временем 
+    /* Вызов строки с датой и временем */
     if ((status = system("date")) < 0){
         fprintf (stderr, "Ошибка вызова функции system()");
         exit(EXIT_FAILURE);

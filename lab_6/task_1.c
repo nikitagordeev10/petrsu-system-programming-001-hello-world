@@ -23,20 +23,20 @@ int main(int argc, char **argv)
 {
     /* Проверка на наличие аргументов */
     if (argc != 2) {
-	    fprintf (stderr, "Использование: ./task_1 программа\n", argv[0]);
+	    fprintf (stderr, "Использование: ./task_1 программа\n");
 	    exit(EXIT_FAILURE);
     }
 
     pid_t pid = fork();
     int status;
 
-    // Вызов функции fork
+    /* Вызов функции fork */
     if((pid) < 0){
         fprintf (stderr, "Ошибка создания нового процесса fork\n");
 	    exit(EXIT_FAILURE);
     } 
 
-    // Запуск новой программы
+    /* Запуск новой программы */
     if (pid == 0) {
         if (execl(argv[1], argv[1], NULL) < 0){
             fprintf (stderr, "Ошибка запуска новой программы exec\n");
@@ -44,16 +44,16 @@ int main(int argc, char **argv)
         }
     } 
     
-    // waitpid ожидает смену состояния процесса
+    /* waitpid ожидает смену состояния процесса */
     if (waitpid(pid, &status, 0) < 0){
         fprintf (stderr, "Ошибка вызова функции waitpid\n");
         exit(EXIT_FAILURE);
     }
 
-    // WIFEXITED возвращает true, если код status получен в результате нормального завершения дочернего процесса. 
-    // WIFSIGNALED возвращает true, если код status получен в результате аварийного завершения дочернего процесса из-за сигнала, который не был перехвачен.
-    // WEXITSTATUS возвращает младшие 8 бит из аргумента, который был передан функции exit.
-    if (WIFEXITED(status)) {
+    /* WIFEXITED возвращает true, если код status получен в результате нормального завершения дочернего процесса. 
+     * WIFSIGNALED возвращает true, если код status получен в результате аварийного завершения дочернего процесса из-за сигнала, который не был перехвачен.
+     * WEXITSTATUS возвращает младшие 8 бит из аргумента, который был передан функции exit. */
+   if (WIFEXITED(status)) {
         printf("Процесс завершился с кодом %d\n", WEXITSTATUS(status));
     } else if (WIFSIGNALED(status)){ 
         printf("Выполнение процесса было прервано сигналом: %d\n", WTERMSIG(status));
