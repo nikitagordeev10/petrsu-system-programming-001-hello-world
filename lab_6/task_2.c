@@ -37,35 +37,26 @@ int main(int argc, char **argv)
     if((pid) < 0){
         fprintf (stderr, "Ошибка создания нового процесса fork\n");
 	    exit(EXIT_FAILURE);
-    } 
-    
-    else if (pid == 0){
+    } else if (pid == 0){
         /* Явное изменение текущей позиции в файле. От начала файла. */
         position = lseek(file, 10, SEEK_SET);
-
         if (position == -1){
             fprintf (stderr, "Ошибка изменения текущей позиции в файле lseek\n");
     	    exit(EXIT_FAILURE);
 		}
-
         printf("Позиция в дочернем процессе == %d\n", position);
-	} 
-    
-    else {
+	} else {
         /* waitpid ожидает смену состояния процесса */
 	    if (waitpid(pid, NULL, 0) < 0) {
             fprintf (stderr, "Ошибка вызова функции waitpid\n");
             exit(EXIT_FAILURE);
 	    }
-        
         /* Явное изменение текущей позиции в файле. от текущей позиции в файле. */
         position = lseek(file, 0, SEEK_CUR);
-
 	    if (position == -1){
             fprintf (stderr, "Ошибка изменения текущей позиции в файле lseek\n");
     	    exit(EXIT_FAILURE);
 	    }
-
 	    printf("Позиция в родительском процессе == %d\n", position);
     } 
 

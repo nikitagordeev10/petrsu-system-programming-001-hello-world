@@ -7,93 +7,89 @@
  * This code is licensed under a MIT-style license.
  */
 
-#include <unistd.h>
-#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <fcntl.h>
+#include <string.h>
 #include <sys/wait.h>
-#include "apue.h"
+#include <unistd.h>
+#include <errno.h>
+#include <limits.h>
 #include <linux/limits.h>
 
-int main(int argc, char **argv)
-{
-    /* Инициализация аргументов */
-    char* path; //
-    char input_files[PATH_MAX]; //
-    pid_t pid; //
-    
-    int status;
-    int _k1 = 0;
-    int _k2 = 0;
-    int amount = 0; //Для подсчета
+/* запуск файла на исполнение */
+int my_execlp(const char *);
 
-    /* Проверка на наличие аргументов */
-    if (argc != 2) {
+int main(int argc, char *argv[]) {
+    /* проверяем кол-во аргументов */
+    if (argc < 2) {
 	    fprintf (stderr, "Использование: ./task_4 test\n");
         exit(EXIT_FAILURE);
     }
 
-    /* Проверка существования новой программы */
-    if (strchr(argv[1], '/') != 0) {
-        if (execl(argv[1], argv[1], NULL) == -1) {
-            fprintf (stderr, "Ошибка запуска новой программы exec\n");
-	        exit(EXIT_FAILURE);
-        };
-        return 0;
-    }
-
-    path = getenv("PATH");
-    _k1 = strlen(path);
-    pid = fork();
-    
-    /* Выводит ошибку, если ошибка при оперед патча */
-    if (path == NULL) {
-        printf("getenv() error\n");
-        fprintf (stderr, "Ошибка получения переменной окружения getenv\n");
-	    exit(EXIT_FAILURE);
+    /* клонируем процесс */
+    pid_t pid;
+    int status;
+    if ((pid = fork()) < 0) {
+        perror("Ошибка функции fork()");
         exit(EXIT_FAILURE);
-    }
-
-    /* Выводит ошибку, если ошибка при создании процесса */
-    if ((pid) < 0) {
-        fprintf (stderr, "Ошибка создания нового процесса fork\n");
-	    exit(EXIT_FAILURE);
-    }
-    /* Иначе делаем: */
-    else if(pid == 0) {
-        while (1) {
-            while (path[amount + _k2] != ':' ||'\0') {
-                input_files[amount] = path[amount + _k2];
-                amount++;
-            }
-
-            _k2 = amount + _k2 + 1;
-            input_files[_k2] = path[amount];
-            input_files[amount] = '/';
-            input_files[amount + 1] = 0;
-            strcat(input_files, argv[1]);
-            amount = 0; // обнуляем количество
-
-            if (execl(input_files, input_files, NULL) != -1) {
-                break;
-            }
-            /* Если не знаем такую команду выводим и выходим */
-            if (_k2 > _k1) {
-                printf("I unknown this command\n");
-                break;
-            }
+    } else if (pid == 0) {
+        /* В дочернем процессе запускаем функцию my_execlp */
+        if (my_execlp(argv[1]) == -1) {
+            exit(EXIT_FAILURE);
         }
-    }
-    else {
-        /* Выводит ошибку, если ошибка в waidpid */
-        if ((waitpid(pid, &status, 0)) == -1) {
-            printf("Waitpid() error\n");
+    } else {
+        /* Ожидаем завершения дочернего процесса */
+        if (waitpid(pid, &status, 0) == -1) {
+            perror("Ошибка функции waitpid()");
             exit(EXIT_FAILURE);
         }
     }
 
     return 0;
+}
+
+/* запуск файла на исполнение */
+int my_execlp(const char *file) {
+
+    /* составляем путь к файлу */
+    int pos = 0;
+    char buf[PATH_MAX] = "";
+    strcat(buf, file);
+
+    /* если файл существует, прерываем цикл */
+    if (execl(buf, buf, NULL) != -1)
+        return 0;
+    
+    /* иначе в имени программы ошибка */
+    char *path;
+    
+    /* получаем переменную PATH */
+    if ((path = getenv("PATH")) == NULL) {
+        perror("Ошибка вызова getenv()");
+        return -1;
+    }
+
+    /* ищем имя программы */
+    long len = strlen(path);
+    for (long ch = 0; ch <= len; ch++) {
+        /* делим PATH по двоеточиям */
+        if (path[ch] == ':') {
+            /* Составляем путь к файлу */
+            strcat(buf, "/");
+            strcat(buf, file);
+            /* и пытаемся запустить */
+            if (execl(buf, buf, NULL) != -1) break;
+            memset(buf, 0, PATH_MAX);
+            pos = 0;
+        } else {
+            buf[pos] = path[ch];
+            pos++;
+        }
+    }
+
+    /* если программа не была найдена и запущена, то выводим ошибку */
+    printf("Файл программы не найден\n");
+    return -1;
 }
 
 /*
