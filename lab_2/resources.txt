@@ -1,0 +1,3 @@
+Электронная библиотека RuLit // UNIX-Professionalnoe-programmirovanie_RuLit_Me_609965.pdf URL: https://www.rulit.me/data/programs/resources/pdf/UNIX-Professionalnoe-programmirovanie_RuLit_Me_609965.pdf (дата обращения: 24.09.2022).
+man pages section 1: User Commands // Oracle URL: https://docs.oracle.com/cd/E88353_01/html/E37839/ulimit-1.html (дата обращения: 24.09.2022).
+Команда Ulimit под Linux // Русские блоги URL: https://russianblogs.com/article/82362052654/ (дата обращения: 24.09.2022).
