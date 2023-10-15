@@ -1,58 +1,58 @@
-# Игнорировать файлы сборок, компилятора, линкера, и временные файлы
-*.o
-*.obj
-*.exe
-*.dll
-*.pyc
-*.out
-*.bin
-*.elf
-*.swp
-*~
-*.class
-*-exe-S
-*-exe-c
-*.c#
-*.h5
+# # Игнорировать файлы сборок, компилятора, линкера, и временные файлы
+# *.o
+# *.obj
+# *.exe
+# *.dll
+# *.pyc
+# *.out
+# *.bin
+# *.elf
+# *.swp
+# *~
+# *.class
+# *-exe-S
+# *-exe-c
+# *.c#
+# *.h5
 
-# Игнорировать файлы проекта и среды разработки
-.vscode/
-.gdb_history
-.idea/
-.idea
-*.suo
-*.user
-*.sln
-*.vcxproj
-*.userprefs
+# # Игнорировать файлы проекта и среды разработки
+# .vscode/
+# .gdb_history
+# .idea/
+# .idea
+# *.suo
+# *.user
+# *.sln
+# *.vcxproj
+# *.userprefs
 
-# Игнорировать сгенерированные файлы и логи
-bin/
-build/
-dist/
-target/
-*.log
-log/
-logs/
+# # Игнорировать сгенерированные файлы и логи
+# bin/
+# build/
+# dist/
+# target/
+# *.log
+# log/
+# logs/
 
-# Игнорировать файлы окружения Python
-__pycache__/
-venv/
-env/
-*.env
-pypy/
-*.pyd
-*.pyo
+# # Игнорировать файлы окружения Python
+# __pycache__/
+# venv/
+# env/
+# *.env
+# pypy/
+# *.pyd
+# *.pyo
 
-# Игнорировать компоненты сборки проекта
-Makefile
-\#Makefile\#
-CMakeLists.txt
-build.xml
-pom.xml
+# # Игнорировать компоненты сборки проекта
+# Makefile
+# \#Makefile\#
+# CMakeLists.txt
+# build.xml
+# pom.xml
 
-# Игнорировать специфические файлы операционных систем
-.DS_Store
+# # Игнорировать специфические файлы операционных систем
+# .DS_Store
 
 # Рабочие папки
 /_trash
